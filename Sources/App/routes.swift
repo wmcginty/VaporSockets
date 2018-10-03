@@ -2,19 +2,25 @@ import Vapor
 
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
+    
     // Basic "It works" example
     router.get { req in
         return "It works!"
     }
     
-    // Basic "Hello, world!" example
-    router.get("hello") { req in
-        return "Hello, world!"
+    router.post("create") { req in
+        return SessionManager.shared.createSession(for: req)
     }
-
-    // Example of configuring a controller
-    let todoController = TodoController()
-    router.get("todos", use: todoController.index)
-    router.post("todos", use: todoController.create)
-    router.delete("todos", Todo.parameter, use: todoController.delete)
+    
+    router.post("close", Session.parameter) { req -> HTTPStatus in
+        let session = try req.parameters.next(Session.self)
+        SessionManager.shared.close(session)
+        return .ok
+    }
+    
+    router.post(Location.self, at: "update", Session.parameter) { req, location -> HTTPStatus in
+        let session = try req.parameters.next(Session.self)
+        SessionManager.shared.update(location, for: session)
+        return .ok
+    }
 }

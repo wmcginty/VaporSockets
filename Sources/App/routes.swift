@@ -18,7 +18,8 @@ public func routes(_ router: Router) throws {
         return .ok
     }
     
-    router.post(Location.self, at: "update", Session.parameter) { req, location -> HTTPStatus in
+    router.post("update", Session.parameter) { req -> HTTPStatus in
+        let location = try JSONDecoder().decode(Location.self, from: req.http.body.data!)
         let session = try req.parameters.next(Session.self)
         SessionManager.shared.update(location, for: session)
         return .ok

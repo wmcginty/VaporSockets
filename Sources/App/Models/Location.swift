@@ -9,6 +9,7 @@ import Foundation
 import Vapor
 
 struct Location: Content {
-    let latitude: Double
-    let longitude: Double
+    let identifier: UUID
+    let latitude: Float
+    let longitude: Float
 }

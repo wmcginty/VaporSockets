@@ -20,6 +20,9 @@ struct WebSocketRouter {
             }
             
             SessionManager.shared.add(listener: socket, to: session)
+            debugPrint("connected to \(session.id)")
+            
+            socket.send("helllllooo!")
         }
         
         socketServer.get("echo") { socket, req in
